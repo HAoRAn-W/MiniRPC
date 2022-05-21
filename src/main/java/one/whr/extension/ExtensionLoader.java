@@ -76,6 +76,8 @@ public class ExtensionLoader<T> {
         // double check lock
         if (instance == null) {
             synchronized (holder) {
+                // though we have synchronization on local variable, but only the reference is local
+                // in Java memory model, the object lives on heap, which may be access by multiple threads
                 instance = holder.get();
                 if (instance == null) {
                     instance = createExtension(name);
