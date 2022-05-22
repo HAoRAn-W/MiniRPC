@@ -1,4 +1,4 @@
-package one.whr.utils;
+package one.whr.extension;
 
 /**
  * This is a helper class for holding a value
