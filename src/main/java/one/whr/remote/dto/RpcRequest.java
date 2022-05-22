@@ -16,15 +16,15 @@ import java.io.Serializable;
 @ToString
 public class RpcRequest implements Serializable {
     private static final long serialVersionUID = -4524292873066011146L;
-//    private String requestId;
+    private String requestId;
     private String interfaceName;
     private String methodName;
-//    private Object[] parameters;
-//    private Class<?>[] paramTypes;
-//    private String version;
-//    private String group;
-//
-//    public String getRpcServiceName() {
-//        return this.getInterfaceName() + this.getGroup() + this.getVersion();
-//    }
+    private Object[] parameters;
+    private Class<?>[] paramTypes;
+    private String version;
+    private String group;
+
+    public String getRpcServiceName() {
+        return this.getInterfaceName() + this.getGroup() + this.getVersion();
+    }
 }
