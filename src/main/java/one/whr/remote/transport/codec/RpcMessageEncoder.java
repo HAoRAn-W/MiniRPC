@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import one.whr.compress.Compress;
 import one.whr.extension.ExtensionLoader;
 import one.whr.remote.dto.RpcMessage;
-import one.whr.remote.dto.enums.CompressTypeEnum;
-import one.whr.remote.dto.enums.SerializationEnum;
+import one.whr.enums.CompressTypeEnum;
+import one.whr.enums.SerializationEnum;
 import one.whr.serialization.Serializer;
 import one.whr.utils.RpcConstants;
 

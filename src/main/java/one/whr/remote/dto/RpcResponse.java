@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import one.whr.remote.dto.enums.RpcResponseCodeEnum;
+import one.whr.enums.RpcResponseCodeEnum;
 
 import java.io.Serializable;
 

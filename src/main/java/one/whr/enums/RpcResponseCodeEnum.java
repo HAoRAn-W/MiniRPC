@@ -1,4 +1,4 @@
-package one.whr.remote.dto.enums;
+package one.whr.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

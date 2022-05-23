@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import one.whr.factory.SingletonFactory;
 import one.whr.remote.dto.RpcMessage;
 import one.whr.remote.dto.RpcResponse;
-import one.whr.remote.dto.enums.CompressTypeEnum;
-import one.whr.remote.dto.enums.SerializationEnum;
+import one.whr.enums.CompressTypeEnum;
+import one.whr.enums.SerializationEnum;
 import one.whr.utils.RpcConstants;
 
 import java.net.InetSocketAddress;
