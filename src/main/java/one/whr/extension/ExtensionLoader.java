@@ -2,7 +2,7 @@ package one.whr.extension;
 
 
 import lombok.extern.slf4j.Slf4j;
-import one.whr.extension.annotation.SPI;
+import one.whr.annotation.SPI;
 import one.whr.utils.StringUtil;
 
 import java.io.BufferedReader;

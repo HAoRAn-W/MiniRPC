@@ -1,4 +1,4 @@
-package one.whr.extension.annotation;
+package one.whr.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

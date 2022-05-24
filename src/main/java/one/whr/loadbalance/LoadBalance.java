@@ -1,6 +1,6 @@
 package one.whr.loadbalance;
 
-import one.whr.extension.annotation.SPI;
+import one.whr.annotation.SPI;
 import one.whr.remote.dto.RpcRequest;
 
 import java.util.List;

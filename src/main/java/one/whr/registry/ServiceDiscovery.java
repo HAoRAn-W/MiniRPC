@@ -1,6 +1,6 @@
 package one.whr.registry;
 
-import one.whr.extension.annotation.SPI;
+import one.whr.annotation.SPI;
 import one.whr.remote.dto.RpcRequest;
 
 import java.net.InetSocketAddress;

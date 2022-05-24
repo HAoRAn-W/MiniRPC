@@ -1,6 +1,6 @@
 package one.whr.serialization;
 
-import one.whr.extension.annotation.SPI;
+import one.whr.annotation.SPI;
 
 @SPI
 public interface Serializer {
