@@ -8,19 +8,22 @@ import one.whr.extension.ExtensionLoader;
 import one.whr.factory.SingletonFactory;
 import one.whr.proxy.RpcClientProxy;
 import one.whr.registry.ServiceProvider;
+import one.whr.registry.zookeeper.ZkServiceProviderImpl;
 import one.whr.remote.transport.RpcRequestTransport;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 
 @Slf4j
+@Component
 public class SpringBeanPostProcessor implements BeanPostProcessor {
     private final ServiceProvider serviceProvider;
     private final RpcRequestTransport rpcClient;
 
     public SpringBeanPostProcessor() {
-        this.serviceProvider = SingletonFactory.getInstance(ServiceProvider.class);
+        this.serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
         this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
     }
 

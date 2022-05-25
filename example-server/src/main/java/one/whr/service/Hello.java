@@ -16,7 +16,6 @@ import java.io.Serializable;
 @Builder
 @ToString
 public class Hello implements Serializable {
-    private static final long serialVersionUID = -5231223407496511418L;
     private String message;
     private String description;
 }

@@ -51,6 +51,7 @@ public class RpcClientProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws ExecutionException, InterruptedException {
         log.info("Method invoked: [{}]", method.getName());
         RpcRequest rpcRequest = RpcRequest.builder()
+                .methodName(method.getName())
                 .parameters(args)
                 .interfaceName(method.getDeclaringClass().getName())
                 .paramTypes(method.getParameterTypes())
