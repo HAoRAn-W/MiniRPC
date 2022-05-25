@@ -1,7 +1,9 @@
+package one.whr;
+
 import one.whr.annotation.RpcReference;
 import org.springframework.stereotype.Component;
-import service.Hello;
-import service.HelloService;
+import one.whr.service.Hello;
+import one.whr.service.HelloService;
 
 @Component
 public class HelloController {

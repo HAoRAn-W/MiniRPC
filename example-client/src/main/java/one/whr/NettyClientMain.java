@@ -1,3 +1,5 @@
+package one.whr;
+
 import one.whr.annotation.RpcScan;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
