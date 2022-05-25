@@ -1,0 +1,1 @@
+loadBalance=one.whr.loadbalance.loadbalancer.ConsistentHashLoadBalancer
