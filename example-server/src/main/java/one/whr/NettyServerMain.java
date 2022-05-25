@@ -2,10 +2,10 @@ package one.whr;
 
 import one.whr.annotation.RpcScan;
 import one.whr.config.RpcServiceConfig;
+import one.whr.impl.HelloServiceImpl;
 import one.whr.remote.transport.server.RpcServer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import one.whr.service.HelloService;
-import one.whr.service.impl.HelloServiceImpl;
+import service.HelloService;
 
 import java.net.UnknownHostException;
 

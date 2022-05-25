@@ -1,4 +1,4 @@
-package one.whr.service;
+package service;
 
 public interface HelloService {
     String hello(Hello hello);

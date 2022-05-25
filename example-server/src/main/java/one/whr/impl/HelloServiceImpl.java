@@ -1,12 +1,12 @@
-package one.whr.service.impl;
+package one.whr.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import one.whr.annotation.RpcService;
-import one.whr.service.Hello;
-import one.whr.service.HelloService;
+import service.Hello;
+import service.HelloService;
 
 @Slf4j
-@RpcService(group = "test1", version = "version1")
+@RpcService(group = "hello-test-1", version = "version1.0")
 public class HelloServiceImpl implements HelloService {
     static {
         System.out.println("HelloServiceImpl created");

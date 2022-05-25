@@ -1,4 +1,4 @@
-package one.whr.service;
+package service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

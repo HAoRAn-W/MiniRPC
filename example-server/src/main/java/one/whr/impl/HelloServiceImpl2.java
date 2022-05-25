@@ -1,8 +1,8 @@
-package one.whr.service.impl;
+package one.whr.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import one.whr.service.Hello;
-import one.whr.service.HelloService;
+import service.Hello;
+import service.HelloService;
 
 @Slf4j
 public class HelloServiceImpl2 implements HelloService {
