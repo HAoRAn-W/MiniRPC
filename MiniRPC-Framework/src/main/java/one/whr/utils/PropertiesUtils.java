@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 @Slf4j
@@ -24,12 +22,10 @@ public class PropertiesUtils {
         }
         Properties properties = null;
         try (InputStreamReader inputStreamReader = new InputStreamReader(
-                Files.newInputStream(Paths.get(rpcConfigPath)), StandardCharsets.UTF_8
-        )) {
+                new FileInputStream(rpcConfigPath), StandardCharsets.UTF_8)) {
             properties = new Properties();
             properties.load(inputStreamReader);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("IOException occurs when read properties file [{}]", fileName);
         }
         return properties;
