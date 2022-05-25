@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import one.whr.loadbalance.AbstractLoadBalancer;
 import one.whr.remote.dto.RpcRequest;
 
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

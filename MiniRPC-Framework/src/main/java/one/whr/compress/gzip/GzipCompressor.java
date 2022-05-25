@@ -1,6 +1,5 @@
 package one.whr.compress.gzip;
 
-import com.esotericsoftware.kryo.util.Null;
 import one.whr.compress.Compress;
 
 import java.io.ByteArrayInputStream;

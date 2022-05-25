@@ -1,6 +1,5 @@
 package one.whr.remote.transport.client;
 
-import one.whr.compress.Compress;
 import one.whr.remote.dto.RpcResponse;
 
 import java.util.Map;
