@@ -9,7 +9,7 @@ import one.whr.factory.SingletonFactory;
 import one.whr.proxy.RpcClientProxy;
 import one.whr.registry.ServiceProvider;
 import one.whr.registry.zookeeper.ZkServiceProviderImpl;
-import one.whr.remote.transport.RpcRequestTransport;
+import one.whr.remote.transport.client.RpcRequestTransport;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;

@@ -31,28 +31,27 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class RpcServer {
-    public static final int PORT = 9998;
+    public static final int PORT = 9998; // Listening port
 
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
-
-    public void registerService(RpcServiceConfig rpcServiceConfig) {
-        serviceProvider.publishService(rpcServiceConfig);
-    }
 
     public void start() throws UnknownHostException {
         CustomShutdownHook.getCustomeShutdownHook().clearAll(); // clear all before start
         String host = InetAddress.getLocalHost().getHostAddress();
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+
+        // 2 NioEventLoop group
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // 1 thread
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
                 Runtime.getRuntime().availableProcessors() * 2,
+                // custom service handlers' thread-pool config
                 ThreadPoolFactoryUtil.createThreadFactory("service-handler-group", false)
         );
 
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            ServerBootstrap bootstrap = new ServerBootstrap(); // bootstrap is used to config EventLoop and start it
             bootstrap.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
+                    .channel(NioServerSocketChannel.class) // we need ServerSocketChannel on server side
                     // disable Nagle algorithm and send package immediately
                     // Nagle's algorithm works by combining a number of small outgoing messages and sending them all at once
                     .childOption(ChannelOption.TCP_NODELAY, true)
@@ -63,13 +62,14 @@ public class RpcServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
+                            ChannelPipeline p = ch.pipeline(); // pipeline is the logic chain for packages
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
                             p.addLast(new RpcMessageEncoder());
                             p.addLast(new RpcMessageDecoder());
-                            p.addLast(serviceHandlerGroup, new RpcServerHandler());
+                            p.addLast(serviceHandlerGroup, new RpcServiceHandler());
                         }
                     });
+
             // bind port and synchronize wait for binding success
             ChannelFuture future = bootstrap.bind(host, PORT).sync();
             // synchronize wait listening port close
@@ -83,6 +83,10 @@ public class RpcServer {
             serviceHandlerGroup.shutdownGracefully();
             log.warn("Shutdown server successfully");
         }
+    }
+
+    public void registerService(RpcServiceConfig rpcServiceConfig) {
+        serviceProvider.publishService(rpcServiceConfig);
     }
 
 }

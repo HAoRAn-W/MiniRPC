@@ -24,21 +24,21 @@ public class ThreadPoolFactoryUtil {
 
     // default thread pool
     public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix) {
-        CustomeThreadPoolConfig customeThreadPoolConfig = new CustomeThreadPoolConfig();
-        return createCustomThreadPoolIfAbsent(customeThreadPoolConfig, threadNamePrefix, false);
+        CustomThreadPoolConfig customThreadPoolConfig = new CustomThreadPoolConfig();
+        return createCustomThreadPoolIfAbsent(customThreadPoolConfig, threadNamePrefix, false);
 
     }
 
-    public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix, CustomeThreadPoolConfig customeThreadPoolConfig) {
-        return createCustomThreadPoolIfAbsent(customeThreadPoolConfig, threadNamePrefix, false);
+    public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix, CustomThreadPoolConfig customThreadPoolConfig) {
+        return createCustomThreadPoolIfAbsent(customThreadPoolConfig, threadNamePrefix, false);
     }
 
-    public static ExecutorService createCustomThreadPoolIfAbsent(CustomeThreadPoolConfig customeThreadPoolConfig,
+    public static ExecutorService createCustomThreadPoolIfAbsent(CustomThreadPoolConfig customThreadPoolConfig,
                                                                  String threadNamePrefix, Boolean daemon) {
-        ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(customeThreadPoolConfig, threadNamePrefix, daemon));
+        ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(customThreadPoolConfig, threadNamePrefix, daemon));
         if (threadPool.isShutdown() || threadPool.isTerminated()) {
             THREAD_POOLS.remove(threadNamePrefix);
-            threadPool = createThreadPool(customeThreadPoolConfig, threadNamePrefix, daemon);
+            threadPool = createThreadPool(customThreadPoolConfig, threadNamePrefix, daemon);
             THREAD_POOLS.put(threadNamePrefix, threadPool);
         }
         return threadPool;
@@ -59,7 +59,7 @@ public class ThreadPoolFactoryUtil {
         });
     }
 
-    private static ExecutorService createThreadPool(CustomeThreadPoolConfig customeThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
+    private static ExecutorService createThreadPool(CustomThreadPoolConfig customeThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
         ThreadFactory threadFactory = createThreadFactory(threadNamePrefix, daemon);
 
         /*

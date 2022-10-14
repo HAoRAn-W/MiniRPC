@@ -25,23 +25,12 @@ public class ZkServiceProviderImpl implements ServiceProvider {
      */
     private final Map<String, Object> serviceMap;
     private final Set<String> registeredServices;
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceRegistry serviceRegistry; // used to register service to ZK
 
     public ZkServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         registeredServices = ConcurrentHashMap.newKeySet();
         serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension("zk");
-    }
-
-    @Override
-    public void addService(RpcServiceConfig rpcServiceConfig) {
-        String rpcServiceName = rpcServiceConfig.getRpcServiceName();
-        if (registeredServices.contains(rpcServiceName)) {
-            return;
-        }
-        registeredServices.add(rpcServiceName);
-        serviceMap.put(rpcServiceName, rpcServiceConfig.getService());
-        log.info("Add service: {} --- interface: {}", rpcServiceName, rpcServiceConfig.getService().getClass().getInterfaces());
     }
 
     @Override
@@ -62,5 +51,16 @@ public class ZkServiceProviderImpl implements ServiceProvider {
         } catch (UnknownHostException e) {
             log.error("Exception occurs when getHostAddress", e);
         }
+    }
+
+    @Override
+    public void addService(RpcServiceConfig rpcServiceConfig) {
+        String rpcServiceName = rpcServiceConfig.getRpcServiceName();
+        if (registeredServices.contains(rpcServiceName)) {
+            return;
+        }
+        registeredServices.add(rpcServiceName);
+        serviceMap.put(rpcServiceName, rpcServiceConfig.getService());
+        log.info("Add service: {} --- interface: {}", rpcServiceName, rpcServiceConfig.getService().getClass().getInterfaces());
     }
 }

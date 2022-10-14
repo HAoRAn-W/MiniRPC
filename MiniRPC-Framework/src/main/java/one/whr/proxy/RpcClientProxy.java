@@ -7,7 +7,7 @@ import one.whr.enums.RpcResponseCodeEnum;
 import one.whr.exception.RpcException;
 import one.whr.remote.dto.RpcRequest;
 import one.whr.remote.dto.RpcResponse;
-import one.whr.remote.transport.RpcRequestTransport;
+import one.whr.remote.transport.client.RpcRequestTransport;
 import one.whr.remote.transport.client.RpcClient;
 
 import java.lang.reflect.InvocationHandler;

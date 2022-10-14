@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Getter
 @Setter
-public class CustomeThreadPoolConfig {
+public class CustomThreadPoolConfig {
     private static final int DEFAULT_CORE_POOL_SIZE = 10;
     private static final int DEFAULT_MAXIMUM_POOL_SIZE = 100;
     private static final int DEFAULT_KEEP_ALIVE_TIME = 1;

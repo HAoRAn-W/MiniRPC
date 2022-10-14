@@ -18,12 +18,14 @@ import one.whr.utils.RpcConstants;
 
 /**
  * Customize channel handler to process messages sent by clients
+ * 1. ping: send pong
+ * 2. request: give to request handler to process and send result
  */
 @Slf4j
-public class RpcServerHandler extends ChannelInboundHandlerAdapter {
+public class RpcServiceHandler extends ChannelInboundHandlerAdapter {
     private final RpcRequestHandler rpcRequestHandler;
 
-    public RpcServerHandler() {
+    public RpcServiceHandler() {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
     }
 
@@ -32,17 +34,21 @@ public class RpcServerHandler extends ChannelInboundHandlerAdapter {
         try {
             if (msg instanceof RpcMessage) {
                 log.info("Server received message: [{}]", msg);
+
+                // msg for responding the clients
                 RpcMessage responseMessage = new RpcMessage();
                 responseMessage.setCodec(SerializationEnum.KYRO.getCode());
                 responseMessage.setCompress(CompressTypeEnum.GZIP.getCode());
 
                 byte messageType = ((RpcMessage) msg).getMessageType();
                 if (messageType == RpcConstants.HEARTBEAT_PING_TYPE) {
+                    // heartbeat type
                     responseMessage.setMessageType(RpcConstants.HEARTBEAT_PONG_TYPE);
                     responseMessage.setData(RpcConstants.PONG);
                 } else {
-                    RpcRequest rpcRequest = (RpcRequest) ((RpcMessage) msg).getData();
-                    Object result = rpcRequestHandler.handle(rpcRequest);
+                    // request type
+                    RpcRequest rpcRequest = (RpcRequest) ((RpcMessage) msg).getData(); // get request from RPC message
+                    Object result = rpcRequestHandler.handle(rpcRequest); // give request to RpcRequestHandler to process
                     log.info(String.format("Server RPC get result: %s", result.toString()));
                     responseMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                     if (ctx.channel().isActive() && ctx.channel().isWritable()) {
