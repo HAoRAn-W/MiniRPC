@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * Service Provider Interface
+ * used for mark SPI interfaces
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

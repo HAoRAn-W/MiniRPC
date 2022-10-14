@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * RPC reference annotation, autowire the service implementation class
+ * 用来标记服务的group和version, 在postProcessAfterInitialization的时候用来配置代理类
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
