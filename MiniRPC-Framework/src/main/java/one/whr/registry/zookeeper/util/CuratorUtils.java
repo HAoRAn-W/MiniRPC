@@ -84,7 +84,7 @@ public class CuratorUtils {
      * 添加一个watcher，在子节点发生改变时更新服务地址保存进SERVICE_ADDRESS_MAP
      * @param rpcServiceName 服务名
      * @param zkClient zk
-     * @throws Exception
+     * @throws Exception 异常
      */
     private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) throws Exception {
         String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
