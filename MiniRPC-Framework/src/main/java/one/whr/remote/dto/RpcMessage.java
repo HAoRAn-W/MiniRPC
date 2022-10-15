@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * RpcMessage是对request和response的封装，不会进行序列化在网络上传输，所以不需要实现Serializable
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -14,13 +17,13 @@ import lombok.ToString;
 @Builder
 @ToString
 public class RpcMessage {
-    private byte messageType;
+    private byte messageType;  // request 或 response
 
-    private byte codec;
+    private byte codec;  // 编解码方式
 
-    private byte compress;
+    private byte compress;  // 压缩方式
 
-    private int requestId;
+    private int requestId;  // 请求ID
 
-    private Object data;
+    private Object data;  // 消息体
 }

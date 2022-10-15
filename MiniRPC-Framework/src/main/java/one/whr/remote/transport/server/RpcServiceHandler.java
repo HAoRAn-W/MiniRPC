@@ -52,10 +52,10 @@ public class RpcServiceHandler extends ChannelInboundHandlerAdapter {
                     log.info(String.format("Server RPC get result: %s", result.toString()));
                     responseMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                     if (ctx.channel().isActive() && ctx.channel().isWritable()) {
-                        RpcResponse<Object> rpcResponse = RpcResponse.success(result, rpcRequest.getRequestId());
+                        RpcResponse<Object> rpcResponse = RpcResponse.generateSuccessResponse(result, rpcRequest.getRequestId());
                         responseMessage.setData(rpcResponse);
                     } else {
-                        RpcResponse<Object> rpcResponse = RpcResponse.fail(RpcResponseCodeEnum.FAIL);
+                        RpcResponse<Object> rpcResponse = RpcResponse.generateFailResponse(RpcResponseCodeEnum.FAIL);
                         responseMessage.setData(rpcResponse);
                         log.error("context not writable now, message dropped");
                     }
