@@ -19,12 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ZkServiceProviderImpl implements ServiceProvider {
 
-    /**
-     * key: rpc service name (interface name + version + group)
-     * value: service object
-     */
+    // key: rpc service name (interface name + version + group)
+    // value: service object
     private final Map<String, Object> serviceMap;
+
     private final Set<String> registeredServices;
+
     private final ServiceRegistry serviceRegistry; // used to register service to ZK
 
     public ZkServiceProviderImpl() {
@@ -33,6 +33,11 @@ public class ZkServiceProviderImpl implements ServiceProvider {
         serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension("zk");
     }
 
+    /**
+     * 服务端根据服务名称获取服务对应的实例
+     * @param rpcServiceName RPC服务名称
+     * @return
+     */
     @Override
     public Object getService(String rpcServiceName) {
         Object service = serviceMap.get(rpcServiceName);
@@ -42,6 +47,11 @@ public class ZkServiceProviderImpl implements ServiceProvider {
         return service;
     }
 
+    /**
+     * 将服务发布到zk，被@RpcService注解标记的服务类会在postProcessBeforeInitialization时被发布
+     * 也可以手动在服务器组件中发布，RpcServer也利用了这个方法
+     * @param rpcServiceConfig RPC服务配置
+     */
     @Override
     public void publishService(RpcServiceConfig rpcServiceConfig) {
         try {
