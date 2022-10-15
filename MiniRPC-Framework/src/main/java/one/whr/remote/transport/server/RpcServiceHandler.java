@@ -37,7 +37,7 @@ public class RpcServiceHandler extends ChannelInboundHandlerAdapter {
 
                 // msg for responding the clients
                 RpcMessage responseMessage = new RpcMessage();
-                responseMessage.setCodec(SerializationEnum.KYRO.getCode());
+                responseMessage.setCodec(SerializationEnum.KRYO.getCode());
                 responseMessage.setCompress(CompressTypeEnum.GZIP.getCode());
 
                 byte messageType = ((RpcMessage) msg).getMessageType();

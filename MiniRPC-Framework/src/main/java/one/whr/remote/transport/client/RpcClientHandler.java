@@ -8,6 +8,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
+import one.whr.extension.ExtensionLoader;
 import one.whr.factory.SingletonFactory;
 import one.whr.remote.dto.RpcMessage;
 import one.whr.remote.dto.RpcResponse;
@@ -26,6 +27,7 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter {
     public RpcClientHandler() {
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequestMap.class);
         this.rpcClient = SingletonFactory.getInstance(RpcClient.class);
+//        this.rpcClient = (RpcClient) ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
     }
 
     @Override
@@ -57,7 +59,7 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter {
                 log.info("write idle happens: [{}]", ctx.channel().remoteAddress());
                 Channel channel = rpcClient.getChannel((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = new RpcMessage();
-                rpcMessage.setCodec(SerializationEnum.KYRO.getCode());
+                rpcMessage.setCodec(SerializationEnum.KRYO.getCode());
                 rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                 rpcMessage.setMessageType(RpcConstants.HEARTBEAT_PING_TYPE);
                 rpcMessage.setData(RpcConstants.PING);

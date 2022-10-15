@@ -22,7 +22,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
     public RpcMessageDecoder() {
         // lengthFieldOffset: magic code is 4B, and version is 1B, and then full length. so value is 5
         // lengthFieldLength: full length is 4B. so value is 4
-        // lengthAdjustment: in our message format, the full length include header, so we need to deduct 9 bytes header length
+        // lengthAdjustment: 9 bytes before and including full length field
         // initialBytesToStrip: we will check magic code and version manually, so do not strip any bytes. so values is 0
         this(RpcConstants.MAX_FRAME_LENGTH, 5, 4, -9, 0);
     }
@@ -32,6 +32,13 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         super(maxFrameLength, lengthFieldOffset, lengthFieldLength, lengthAdjustment, initialBytesToStrip);
     }
 
+    /**
+     * 按照规则解码消息
+     * @param ctx 上下文
+     * @param byteBuf buffer
+     * @return 解码后的消息
+     * @throws Exception 异常
+     */
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf byteBuf) throws Exception {
         Object decoded = super.decode(ctx, byteBuf);

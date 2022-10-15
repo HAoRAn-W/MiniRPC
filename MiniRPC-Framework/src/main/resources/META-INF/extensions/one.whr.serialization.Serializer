@@ -1,1 +1,1 @@
-kyro=one.whr.serialization.KryoSerializer
+kryo=one.whr.serialization.KryoSerializer

@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 public class RpcClient implements RpcRequestTransport {
     private final Bootstrap bootstrap;
     private final EventLoopGroup eventLoopGroup;
-
     private final UnprocessedRequestMap unprocessedRequests;
     private final ChannelProvider channelProvider;
     private final ServiceDiscovery serviceDiscovery;
@@ -53,9 +52,9 @@ public class RpcClient implements RpcRequestTransport {
                     public void initChannel(SocketChannel ch) {
                         ch.pipeline()
                                 .addLast(new IdleStateHandler(0, 0, 0, TimeUnit.SECONDS))
-                                .addLast(new RpcMessageEncoder())
-                                .addLast(new RpcMessageDecoder())
-                                .addLast(new RpcClientHandler());
+                                .addLast(new RpcMessageEncoder())  // outbound
+                                .addLast(new RpcMessageDecoder())  // inbound
+                                .addLast(new RpcClientHandler());  // inbound
                     }
                 });
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequestMap.class);
@@ -63,38 +62,21 @@ public class RpcClient implements RpcRequestTransport {
         this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
     }
 
-    public Channel doConnect(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
-        CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
-        bootstrap.connect(inetSocketAddress).addListener((ChannelFutureListener) future -> {
-            if (future.isSuccess()) {
-                log.info("Client has connected to [{}] successfully", inetSocketAddress.toString());
-                completableFuture.complete(future.channel());
-            } else {
-                throw new IllegalStateException();
-            }
-        });
-        return completableFuture.get();
-    }
-
-    public Channel getChannel(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
-        Channel channel = channelProvider.get(inetSocketAddress);
-        if (channel == null) {
-            channel = doConnect(inetSocketAddress);
-            channelProvider.set(inetSocketAddress, channel);
-        }
-        return channel;
-    }
-
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) throws ExecutionException, InterruptedException {
         CompletableFuture<RpcResponse<Object>> resultFuture = new CompletableFuture<>();
+
+        // 获取服务地址
         InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest);
+
+        // 根据服务地址创建channel
         Channel channel = getChannel(inetSocketAddress);
         if (channel.isActive()) {
+            // 将请求存入map
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
             RpcMessage rpcMessage = RpcMessage.builder()
                     .data(rpcRequest)
-                    .codec(SerializationEnum.KYRO.getCode())
+                    .codec(SerializationEnum.KRYO.getCode())
                     .compress(CompressTypeEnum.GZIP.getCode())
                     .messageType(RpcConstants.REQUEST_TYPE)
                     .build();
@@ -113,6 +95,33 @@ public class RpcClient implements RpcRequestTransport {
         }
         return resultFuture;
     }
+
+    public Channel getChannel(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
+        // 如果连接已经创建，直接拿来用
+        Channel channel = channelProvider.get(inetSocketAddress);
+
+        // 连接没有创建，先建立连接
+        if (channel == null) {
+            channel = doConnect(inetSocketAddress);
+            channelProvider.set(inetSocketAddress, channel);
+        }
+        return channel;
+    }
+
+    public Channel doConnect(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
+        CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
+        bootstrap.connect(inetSocketAddress).addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                log.info("Client has connected to [{}] successfully", inetSocketAddress.toString());
+                completableFuture.complete(future.channel());
+            } else {
+                throw new IllegalStateException();
+            }
+        });
+        return completableFuture.get();
+    }
+
+
 
     public void close() {
         eventLoopGroup.shutdownGracefully();

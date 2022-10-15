@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * ChannelProvider is used to store and provide channels
+ * 保存已经建立的channel连接
  */
 @Slf4j
 public class ChannelProvider {
