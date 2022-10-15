@@ -18,6 +18,12 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
     // store selectors for different services
     private final ConcurrentHashMap<String, ConsistentHashSelector> selectors = new ConcurrentHashMap<>();
 
+    /**
+     * 通过RPC请求中的service名称选择selector进行地址选择
+     * @param serviceAddresses 服务地址列表
+     * @param rpcRequest RPC 请求
+     * @return 服务地址
+     */
     @Override
     protected String doSelect(List<String> serviceAddresses, RpcRequest rpcRequest) {
         int identityHashCode = System.identityHashCode(serviceAddresses);
@@ -41,7 +47,6 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
      * 3. 静态内部类可以直接访问外部类的静态成员，如果要访问外部类的实例成员，则需要通过外部类的实例去访问
      */
 
-
     /**
      * 一致性哈希选择器
      *
@@ -49,13 +54,18 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
     static class ConsistentHashSelector {
         // store workers for the service
         private final TreeMap<Long, String> virtualInvokers;
-        private final int identityHashCode;
+        private final int identityHashCode; // 服务对应的identityHashCode
 
-        ConsistentHashSelector(List<String> invokers, int replicaNumber, int identityHashCode) {
+        /**
+         * @param serviceAddresses 服务地址列表
+         * @param replicaNumber replica数量
+         * @param identityHashCode identity哈希
+         */
+        ConsistentHashSelector(List<String> serviceAddresses, int replicaNumber, int identityHashCode) {
             this.virtualInvokers = new TreeMap<>();
             this.identityHashCode = identityHashCode;
 
-            for (String invoker : invokers) {
+            for (String invoker : serviceAddresses) {
                 for (int i = 0; i < replicaNumber / 4; i++) {
                     byte[] digest = md5(invoker + i);
                     for (int j = 0; j < 4; j++) {
