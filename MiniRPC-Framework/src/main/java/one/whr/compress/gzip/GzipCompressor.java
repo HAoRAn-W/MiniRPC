@@ -8,10 +8,18 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * Gzip compressor实现
+ */
 public class GzipCompressor implements Compress {
 
     private static final int BUFFER_SIZE = 1024 * 4;
 
+    /**
+     * 将bytes压缩
+     * @param bytes bytes数组
+     * @return 压缩后的byte数组
+     */
     @Override
     public byte[] compress(byte[] bytes) {
         if (bytes == null) {
@@ -28,6 +36,10 @@ public class GzipCompressor implements Compress {
         }
     }
 
+    /**
+     * @param bytes 带解压的bytes数组
+     * @return 解压后的byte数组
+     */
     @Override
     public byte[] decompress(byte[] bytes) {
         if (bytes == null) {

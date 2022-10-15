@@ -1,11 +1,12 @@
-package one.whr.loadbalance;
+package one.whr.loadbalance.loadbalancer;
 
+import one.whr.loadbalance.AbstractLoadBalancer;
 import one.whr.remote.dto.RpcRequest;
 
 import java.util.List;
 import java.util.Random;
 
-public class RandomLoadBalancer extends AbstractLoadBalancer{
+public class RandomLoadBalancer extends AbstractLoadBalancer {
     @Override
     protected String doSelect(List<String> serviceAddresses, RpcRequest rpcRequest) {
         Random random = new Random();

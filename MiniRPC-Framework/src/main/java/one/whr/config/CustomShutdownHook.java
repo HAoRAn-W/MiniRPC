@@ -9,6 +9,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Shutdown operations for RPC server
+ */
 @Slf4j
 public class CustomShutdownHook {
     private static final CustomShutdownHook CUSTOME_SHUTDOWN_HOOK = new CustomShutdownHook();
@@ -17,6 +20,9 @@ public class CustomShutdownHook {
         return CUSTOME_SHUTDOWN_HOOK;
     }
 
+    /**
+     * clear registry on zk when shutting down
+     */
     public void clearAll() {
         log.info("add shutdown hook for clear all");
         // get current runtime and add shutdown hook
