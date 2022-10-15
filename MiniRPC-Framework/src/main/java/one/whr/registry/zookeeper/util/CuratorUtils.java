@@ -39,6 +39,11 @@ public class CuratorUtils {
     private CuratorUtils() {
     }
 
+    /**
+     * 将服务注册到zk
+     * @param zkClient zk
+     * @param path 服务的路径
+     */
     public static void createPersistentNode(CuratorFramework zkClient, String path) {
         try {
             if (REGISTERED_PATH_SET.contains(path) || zkClient.checkExists().forPath(path) != null) {
@@ -52,6 +57,12 @@ public class CuratorUtils {
         }
     }
 
+    /**
+     * 获取节点下具体的地址列表
+     * @param zkClient zk
+     * @param rpcServiceName 服务名
+     * @return url列表
+     */
     public static List<String> getChildrenNodes(CuratorFramework zkClient, String rpcServiceName) {
         if (SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
             return SERVICE_ADDRESS_MAP.get(rpcServiceName);
@@ -69,6 +80,12 @@ public class CuratorUtils {
         return result;
     }
 
+    /**
+     * 添加一个watcher，在子节点发生改变时更新服务地址保存进SERVICE_ADDRESS_MAP
+     * @param rpcServiceName 服务名
+     * @param zkClient zk
+     * @throws Exception
+     */
     private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) throws Exception {
         String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         PathChildrenCache pathChildrenCache = new PathChildrenCache(zkClient, servicePath, true);
@@ -81,6 +98,11 @@ public class CuratorUtils {
         pathChildrenCache.start();
     }
 
+    /**
+     * clear all registered services
+     * @param zkClient zk
+     * @param inetSocketAddress service address
+     */
     public static void clearRegistry(CuratorFramework zkClient, InetSocketAddress inetSocketAddress) {
         REGISTERED_PATH_SET.stream().parallel().forEach(p -> {
             try {
@@ -95,6 +117,10 @@ public class CuratorUtils {
         log.info("All registered services on the server are cleared:[{}]", REGISTERED_PATH_SET);
     }
 
+    /**
+     * configure and start zk if not started yet
+     * @return zk
+     */
     public static CuratorFramework getZkClient() {
 
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
