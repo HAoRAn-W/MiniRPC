@@ -20,18 +20,32 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
 
     @Override
     protected String doSelect(List<String> serviceAddresses, RpcRequest rpcRequest) {
-        int indentityHashCode = System.identityHashCode(serviceAddresses);
+        int identityHashCode = System.identityHashCode(serviceAddresses);
         String rpcServiceName = rpcRequest.getRpcServiceName();
         ConsistentHashSelector selector = selectors.get(rpcServiceName);
 
-        if(selector == null || selector.identityHashCode != indentityHashCode) {
-            selectors.put(rpcServiceName, new ConsistentHashSelector(serviceAddresses, 160, indentityHashCode));
+        if(selector == null || selector.identityHashCode != identityHashCode) {
+            selectors.put(rpcServiceName, new ConsistentHashSelector(serviceAddresses, 160, identityHashCode));
             selector = selectors.get(rpcServiceName);
         }
         return selector.select(rpcServiceName + Arrays.stream(rpcRequest.getParameters()));
 
     }
 
+    /*
+     * 静态内部类
+     * 1. 在外部创建静态内部类实例不需要创建外部类的实例
+     * 2. 静态内部类中可以定义静态成员和实例成员：
+     *     外部类以外的其他类需要通过完整的类名访问静态内部类中的静态成员
+     *     访问静态内部类中的实例成员，需要通过静态内部类的实例
+     * 3. 静态内部类可以直接访问外部类的静态成员，如果要访问外部类的实例成员，则需要通过外部类的实例去访问
+     */
+
+
+    /**
+     * 一致性哈希选择器
+     *
+     */
     static class ConsistentHashSelector {
         // store workers for the service
         private final TreeMap<Long, String> virtualInvokers;
