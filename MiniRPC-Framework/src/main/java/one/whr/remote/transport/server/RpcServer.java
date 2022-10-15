@@ -28,6 +28,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * RPC 服务端
+ */
 @Slf4j
 @Component
 public class RpcServer {
@@ -35,6 +38,10 @@ public class RpcServer {
 
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
 
+    /**
+     * 创建EventLoop，配置监听端口，配置pipeline，启动服务端
+     * @throws UnknownHostException 异常
+     */
     public void start() throws UnknownHostException {
         CustomShutdownHook.getCustomeShutdownHook().clearAll(); // clear all before start
         String host = InetAddress.getLocalHost().getHostAddress();
@@ -63,10 +70,10 @@ public class RpcServer {
                         @Override
                         protected void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline(); // pipeline is the logic chain for packages
-                            p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-                            p.addLast(new RpcMessageEncoder());
-                            p.addLast(new RpcMessageDecoder());
-                            p.addLast(serviceHandlerGroup, new RpcServiceHandler());
+                            p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));  // in n out
+                            p.addLast(new RpcMessageEncoder());  // outbound
+                            p.addLast(new RpcMessageDecoder());  // inbound
+                            p.addLast(serviceHandlerGroup, new RpcServiceHandler());  // inbound
                         }
                     });
 
@@ -77,6 +84,7 @@ public class RpcServer {
         } catch (InterruptedException e) {
             log.error("Fail to start RPC server: ", e);
         } finally {
+            // 关闭线程池
             log.warn("Shutting down boss group and worker group");
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

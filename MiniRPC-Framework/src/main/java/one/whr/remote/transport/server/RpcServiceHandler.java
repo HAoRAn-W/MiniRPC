@@ -17,9 +17,9 @@ import one.whr.remote.dto.RpcResponse;
 import one.whr.utils.RpcConstants;
 
 /**
- * Customize channel handler to process messages sent by clients
- * 1. ping: send pong
- * 2. request: give to request handler to process and send result
+ * 继承了ChannelInboundHandlerAdapter，处理inbound消息
+ * 处理客户端的请求报文
+ * 并发送给RpcRequestHandler进行服务的调用
  */
 @Slf4j
 public class RpcServiceHandler extends ChannelInboundHandlerAdapter {
@@ -68,6 +68,12 @@ public class RpcServiceHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+    /**
+     * 当channel空闲一段时间没有消息，关闭该连接
+     * @param ctx 上下文
+     * @param evt idle事件
+     * @throws Exception 异常
+     */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
