@@ -49,7 +49,7 @@ public class RpcServer {
 
         // 2 NioEventLoop group
         EventLoopGroup bossGroup = new NioEventLoopGroup(1); // 1 thread， MultithreadEventLoopGroup implementations which is used for NIO Selector based Channels.
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();  // 默认的线程数是cpu核数的两倍
         DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
                 Runtime.getRuntime().availableProcessors() * 2,
                 // custom service handlers' thread-pool config
@@ -60,16 +60,20 @@ public class RpcServer {
             ServerBootstrap bootstrap = new ServerBootstrap(); // bootstrap is used to config EventLoop and start it
             bootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // we need ServerSocketChannel on server side
+                    // backlog length
+                    // Socket参数，服务端接受连接的队列长度，如果队列已满，客户端连接将被拒绝。默认值，Windows为200，其他为128。
+                    .option(ChannelOption.SO_BACKLOG, 128)  // bossGroup option
+                    .handler(new LoggingHandler(LogLevel.INFO))
                     // disable Nagle algorithm and send package immediately
                     // Nagle's algorithm works by combining a number of small outgoing messages and sending them all at once
+                    // workerGroup option
                     .childOption(ChannelOption.TCP_NODELAY, true)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    // backlog length
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)  // 启用该功能时，TCP会主动探测空闲连接的有效性
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) {
+                            // ChannelPipeline是Netty处理请求的责任链，ChannelHandler则是具体处理请求的处理
+                            // 实际上每一个channel都有一个处理器的流水线。
                             ChannelPipeline p = ch.pipeline(); // pipeline is the logic chain for packages
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));  // in n out
                             p.addLast(new RpcMessageEncoder());  // outbound

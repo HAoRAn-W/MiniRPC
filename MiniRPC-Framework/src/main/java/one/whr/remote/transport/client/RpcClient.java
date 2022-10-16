@@ -40,7 +40,8 @@ public class RpcClient implements RpcRequestTransport {
     private final ServiceDiscovery serviceDiscovery;
 
     public RpcClient() {
-        eventLoopGroup = new NioEventLoopGroup();
+        // 每个EventLoopGroup里包括一个或多个EventLoop，每个EventLoop中维护一个Selector实例。
+        eventLoopGroup = new NioEventLoopGroup();  // 默认的线程数是cpu核数的两倍
         bootstrap = new Bootstrap();
 //        KryoSerializer kryoSerializer = new KryoSerializer();
         bootstrap.group(eventLoopGroup)
