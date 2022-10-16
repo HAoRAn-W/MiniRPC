@@ -13,6 +13,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 线程池工具类
+ */
 @Slf4j
 public class ThreadPoolFactoryUtil {
     private static final Map<String, ExecutorService> THREAD_POOLS = new ConcurrentHashMap<>();
@@ -59,7 +62,9 @@ public class ThreadPoolFactoryUtil {
         });
     }
 
-    private static ExecutorService createThreadPool(CustomThreadPoolConfig customeThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
+    private static ExecutorService createThreadPool(CustomThreadPoolConfig customThreadPoolConfig,
+                                                    String threadNamePrefix,
+                                                    Boolean daemon) {
         ThreadFactory threadFactory = createThreadFactory(threadNamePrefix, daemon);
 
         /*
@@ -70,11 +75,20 @@ public class ThreadPoolFactoryUtil {
          * workQueue: the queue to use for holding tasks before they are executed. This queue will hold only the Runnable tasks submitted by the execute method
          * threadFactory: the factory to use when the executor creates a new thread
          */
-        return new ThreadPoolExecutor(customeThreadPoolConfig.getCorePoolSize(), customeThreadPoolConfig.getMaximumPoolSize(),
-                customeThreadPoolConfig.getKeepAliveTime(), customeThreadPoolConfig.getUnit(), customeThreadPoolConfig.getWorkQueue(),
+        return new ThreadPoolExecutor(customThreadPoolConfig.getCorePoolSize(), customThreadPoolConfig.getMaximumPoolSize(),
+                customThreadPoolConfig.getKeepAliveTime(), customThreadPoolConfig.getUnit(), customThreadPoolConfig.getWorkQueue(),
                 threadFactory);
     }
 
+    /**
+     * ThreadFactory is used to create new threads on demand. Threads can be created in two ways:
+     * 1. Creating a class that extends the Thread class and then creating its objects
+     * 2. Creating a class that implements the Runnable interface and then using its object to create threads.
+     *
+     * @param threadNamePrefix 线程命名前缀
+     * @param daemon           是否设置daemon
+     * @return ThreadFactory
+     */
     public static ThreadFactory createThreadFactory(String threadNamePrefix, Boolean daemon) {
         if (threadNamePrefix != null) {
             if (daemon != null) {
@@ -91,9 +105,11 @@ public class ThreadPoolFactoryUtil {
         return Executors.defaultThreadFactory();
     }
 
-    public static void printThredPoolStatus(ThreadPoolExecutor threadPool) {
+    public static void printThreadPoolStatus(ThreadPoolExecutor threadPool) {
+        // 创建一个用来打印线程状态的线程
         ScheduledExecutorService statusExecutor = new ScheduledThreadPoolExecutor(1,
                 createThreadFactory("print-status-thread-pool", false));
+
         statusExecutor.scheduleAtFixedRate(() -> {
             log.info("============ Thread Pool Status ============");
             log.info("ThreadPool size: [{}]", threadPool.getPoolSize());

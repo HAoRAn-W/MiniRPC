@@ -48,7 +48,7 @@ public class RpcServer {
         String host = InetAddress.getLocalHost().getHostAddress();
 
         // 2 NioEventLoop group
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // 1 thread
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // 1 thread， MultithreadEventLoopGroup implementations which is used for NIO Selector based Channels.
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
                 Runtime.getRuntime().availableProcessors() * 2,
