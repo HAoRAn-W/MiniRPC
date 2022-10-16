@@ -8,12 +8,13 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
+import one.whr.enums.CompressTypeEnum;
+import one.whr.enums.SerializationEnum;
 import one.whr.extension.ExtensionLoader;
 import one.whr.factory.SingletonFactory;
 import one.whr.remote.dto.RpcMessage;
 import one.whr.remote.dto.RpcResponse;
-import one.whr.enums.CompressTypeEnum;
-import one.whr.enums.SerializationEnum;
+import one.whr.remote.transport.RpcRequestTransport;
 import one.whr.utils.RpcConstants;
 
 import java.net.InetSocketAddress;
@@ -26,21 +27,20 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter {
 
     public RpcClientHandler() {
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequestMap.class);
-        this.rpcClient = SingletonFactory.getInstance(RpcClient.class);
-//        this.rpcClient = (RpcClient) ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
+//        this.rpcClient = SingletonFactory.getInstance(RpcClient.class);
+        this.rpcClient = (RpcClient) ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
             log.info("client receive message: [{}]", msg);
-            if(msg instanceof RpcMessage) {
+            if (msg instanceof RpcMessage) {
                 RpcMessage tmp = (RpcMessage) msg;
                 byte messageType = tmp.getMessageType();
-                if(messageType == RpcConstants.HEARTBEAT_PONG_TYPE) {
+                if (messageType == RpcConstants.HEARTBEAT_PONG_TYPE) {
                     log.info("heart [{}]", tmp.getData());
-                }
-                else if (messageType == RpcConstants.RESPONSE_TYPE) {
+                } else if (messageType == RpcConstants.RESPONSE_TYPE) {
                     RpcResponse<Object> rpcResponse = (RpcResponse<Object>) tmp.getData();
                     unprocessedRequests.complete(rpcResponse); // todo
                 }
@@ -52,10 +52,10 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object event) throws Exception {
-        if(event instanceof IdleStateEvent) {
+        if (event instanceof IdleStateEvent) {
             // when idle, send ping
             IdleState state = ((IdleStateEvent) event).state();
-            if(state == IdleState.WRITER_IDLE) {
+            if (state == IdleState.WRITER_IDLE) {
                 log.info("write idle happens: [{}]", ctx.channel().remoteAddress());
                 Channel channel = rpcClient.getChannel((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = new RpcMessage();
@@ -65,8 +65,7 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter {
                 rpcMessage.setData(RpcConstants.PING);
                 channel.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
             }
-        }
-        else {
+        } else {
             super.userEventTriggered(ctx, event);
         }
     }

@@ -41,8 +41,9 @@ public class CuratorUtils {
 
     /**
      * 将服务注册到zk
+     *
      * @param zkClient zk
-     * @param path 服务的路径
+     * @param path     服务的路径
      */
     public static void createPersistentNode(CuratorFramework zkClient, String path) {
         try {
@@ -59,7 +60,8 @@ public class CuratorUtils {
 
     /**
      * 获取节点下具体的地址列表
-     * @param zkClient zk
+     *
+     * @param zkClient       zk
      * @param rpcServiceName 服务名
      * @return url列表
      */
@@ -82,8 +84,9 @@ public class CuratorUtils {
 
     /**
      * 添加一个watcher，在子节点发生改变时更新服务地址保存进SERVICE_ADDRESS_MAP
+     *
      * @param rpcServiceName 服务名
-     * @param zkClient zk
+     * @param zkClient       zk
      * @throws Exception 异常
      */
     private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) throws Exception {
@@ -100,7 +103,8 @@ public class CuratorUtils {
 
     /**
      * clear all registered services
-     * @param zkClient zk
+     *
+     * @param zkClient          zk
      * @param inetSocketAddress service address
      */
     public static void clearRegistry(CuratorFramework zkClient, InetSocketAddress inetSocketAddress) {
@@ -119,6 +123,7 @@ public class CuratorUtils {
 
     /**
      * configure and start zk if not started yet
+     *
      * @return zk
      */
     public static CuratorFramework getZkClient() {
@@ -136,11 +141,10 @@ public class CuratorUtils {
 
         zkClient.start();
         try {
-            if(!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+            if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
                 throw new RuntimeException("Timeout waiting for connecting to Zookeeper!");
             }
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return zkClient;

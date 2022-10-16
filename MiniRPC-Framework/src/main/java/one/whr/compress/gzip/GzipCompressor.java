@@ -17,6 +17,7 @@ public class GzipCompressor implements Compress {
 
     /**
      * 将bytes压缩
+     *
      * @param bytes bytes数组
      * @return 压缩后的byte数组
      */

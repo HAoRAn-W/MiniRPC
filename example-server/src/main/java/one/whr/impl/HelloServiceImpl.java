@@ -11,6 +11,7 @@ public class HelloServiceImpl implements HelloService {
     static {
         System.out.println("HelloServiceImpl created");
     }
+
     @Override
     public String hello(Hello hello) {
         log.info("HelloServiceImpl received: {}.", hello.getMessage());

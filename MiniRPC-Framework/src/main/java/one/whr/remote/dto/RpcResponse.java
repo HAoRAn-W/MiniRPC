@@ -28,9 +28,10 @@ public class RpcResponse<T> implements Serializable {
 
     /**
      * 生成success的RPC响应
-     * @param data 服务执行结果
+     *
+     * @param data      服务执行结果
      * @param requestId 请求ID
-     * @param <T> 类型
+     * @param <T>       类型
      * @return RPC响应
      */
     public static <T> RpcResponse<T> generateSuccessResponse(T data, String requestId) {
@@ -46,8 +47,9 @@ public class RpcResponse<T> implements Serializable {
 
     /**
      * 生成RPC失败响应
+     *
      * @param rpcResponseCodeEnum 错误代码
-     * @param <T> 类型
+     * @param <T>                 类型
      * @return RPC失败响应
      */
     public static <T> RpcResponse<T> generateFailResponse(RpcResponseCodeEnum rpcResponseCodeEnum) {

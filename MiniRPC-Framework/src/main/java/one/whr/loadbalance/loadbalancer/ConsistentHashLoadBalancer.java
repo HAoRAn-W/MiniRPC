@@ -20,8 +20,9 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
 
     /**
      * 通过RPC请求中的service名称选择selector进行地址选择
+     *
      * @param serviceAddresses 服务地址列表
-     * @param rpcRequest RPC 请求
+     * @param rpcRequest       RPC 请求
      * @return 服务地址
      */
     @Override
@@ -30,7 +31,7 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
         String rpcServiceName = rpcRequest.getRpcServiceName();
         ConsistentHashSelector selector = selectors.get(rpcServiceName);
 
-        if(selector == null || selector.identityHashCode != identityHashCode) {
+        if (selector == null || selector.identityHashCode != identityHashCode) {
             selectors.put(rpcServiceName, new ConsistentHashSelector(serviceAddresses, 160, identityHashCode));
             selector = selectors.get(rpcServiceName);
         }
@@ -49,7 +50,6 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
 
     /**
      * 一致性哈希选择器
-     *
      */
     static class ConsistentHashSelector {
         // store workers for the service
@@ -58,7 +58,7 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
 
         /**
          * @param serviceAddresses 服务地址列表
-         * @param replicaNumber replica数量
+         * @param replicaNumber    replica数量
          * @param identityHashCode identity哈希
          */
         ConsistentHashSelector(List<String> serviceAddresses, int replicaNumber, int identityHashCode) {
@@ -75,6 +75,7 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
                 }
             }
         }
+
         static byte[] md5(String key) {
             MessageDigest md;
             try {
@@ -103,7 +104,7 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
 
         public String selectByKey(long hashCode) {
             Map.Entry<Long, String> entry = virtualInvokers.tailMap(hashCode, true).firstEntry();
-            if(entry == null) {
+            if (entry == null) {
                 entry = virtualInvokers.firstEntry();
             }
             return entry.getValue();

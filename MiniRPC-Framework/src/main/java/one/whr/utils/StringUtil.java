@@ -4,11 +4,11 @@ public class StringUtil {
 
     // check is a String is null or zero length or contains only whitespaces
     public static boolean isBlank(String s) {
-        if(s == null || s.length() == 0) {
+        if (s == null || s.length() == 0) {
             return true;
         }
-        for(int i = 0; i < s.length(); i++) {
-            if(!Character.isWhitespace(s.charAt(i))) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
             }
         }

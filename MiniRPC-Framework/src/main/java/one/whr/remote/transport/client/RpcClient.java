@@ -13,18 +13,17 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import one.whr.enums.CompressTypeEnum;
+import one.whr.enums.SerializationEnum;
 import one.whr.extension.ExtensionLoader;
 import one.whr.factory.SingletonFactory;
 import one.whr.registry.ServiceDiscovery;
 import one.whr.remote.dto.RpcMessage;
 import one.whr.remote.dto.RpcRequest;
 import one.whr.remote.dto.RpcResponse;
-import one.whr.enums.CompressTypeEnum;
-import one.whr.enums.SerializationEnum;
 import one.whr.remote.transport.RpcRequestTransport;
 import one.whr.remote.transport.codec.RpcMessageDecoder;
 import one.whr.remote.transport.codec.RpcMessageEncoder;
-import one.whr.serialization.KryoSerializer;
 import one.whr.utils.RpcConstants;
 
 import java.net.InetSocketAddress;
@@ -43,7 +42,7 @@ public class RpcClient implements RpcRequestTransport {
     public RpcClient() {
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
-        KryoSerializer kryoSerializer = new KryoSerializer();
+//        KryoSerializer kryoSerializer = new KryoSerializer();
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
@@ -121,7 +120,6 @@ public class RpcClient implements RpcRequestTransport {
         });
         return completableFuture.get();
     }
-
 
 
     public void close() {

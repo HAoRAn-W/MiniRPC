@@ -41,8 +41,9 @@ public class RpcClientProxy implements InvocationHandler {
 
     /**
      * 根据传入的类生产该类的代理类
+     *
      * @param clazz 服务端注册的服务类
-     * @param <T> 类型标记
+     * @param <T>   类型标记
      * @return 代理类的实例
      */
     @SuppressWarnings("unchecked")
@@ -52,6 +53,7 @@ public class RpcClientProxy implements InvocationHandler {
 
     /**
      * 调用时的逻辑
+     *
      * @param proxy  the proxy instance that the method was invoked on
      * @param method the {@code Method} instance corresponding to
      *               the interface method invoked on the proxy instance.  The declaring
@@ -65,7 +67,7 @@ public class RpcClientProxy implements InvocationHandler {
      *               appropriate primitive wrapper class, such as
      *               {@code java.lang.Integer} or {@code java.lang.Boolean}.
      * @return RPC调用响应的数据部分
-     * @throws ExecutionException 异常
+     * @throws ExecutionException   异常
      * @throws InterruptedException 异常
      */
     @SuppressWarnings("unchecked")
@@ -98,8 +100,9 @@ public class RpcClientProxy implements InvocationHandler {
 
     /**
      * 检查响应是否为空，请求和响应的ID是否一致，响应是否成功
+     *
      * @param rpcResponse RPC响应对象
-     * @param rpcRequest RPC请求对象
+     * @param rpcRequest  RPC请求对象
      */
     private void check(RpcResponse<Object> rpcResponse, RpcRequest rpcRequest) {
         if (rpcResponse == null) {

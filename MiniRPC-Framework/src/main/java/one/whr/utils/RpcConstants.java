@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 public class RpcConstants {
     // magic number is used to verify RpcMessages
-    public static final byte[] MAGIC_NUMBER = {(byte) 'g', (byte)'r', (byte)'p', (byte)'c'};
+    public static final byte[] MAGIC_NUMBER = {(byte) 'g', (byte) 'r', (byte) 'p', (byte) 'c'};
 
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 

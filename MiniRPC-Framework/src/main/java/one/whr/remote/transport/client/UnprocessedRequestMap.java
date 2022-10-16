@@ -19,10 +19,9 @@ public class UnprocessedRequestMap {
 
     public void complete(RpcResponse<Object> rpcResponse) {
         CompletableFuture<RpcResponse<Object>> future = UNPROCESSED_RESPONSE_FUTURES.remove(rpcResponse.getRequestId());
-        if(future != null) {
+        if (future != null) {
             future.complete(rpcResponse);
-        }
-        else {
+        } else {
             throw new IllegalStateException();
         }
     }
