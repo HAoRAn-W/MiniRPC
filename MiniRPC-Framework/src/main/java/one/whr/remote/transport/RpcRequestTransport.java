@@ -1,4 +1,4 @@
-package one.whr.remote.transport.client;
+package one.whr.remote.transport;
 
 import one.whr.annotation.SPI;
 import one.whr.remote.dto.RpcRequest;
