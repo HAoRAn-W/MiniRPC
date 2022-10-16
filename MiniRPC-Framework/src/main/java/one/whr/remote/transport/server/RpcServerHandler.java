@@ -22,10 +22,10 @@ import one.whr.utils.RpcConstants;
  * 并发送给RpcRequestHandler进行服务的调用
  */
 @Slf4j
-public class RpcServiceHandler extends ChannelInboundHandlerAdapter {
+public class RpcServerHandler extends ChannelInboundHandlerAdapter {
     private final RpcRequestHandler rpcRequestHandler;
 
-    public RpcServiceHandler() {
+    public RpcServerHandler() {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
     }
 

@@ -74,7 +74,7 @@ public class RpcServer {
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));  // in n out
                             p.addLast(new RpcMessageEncoder());  // outbound
                             p.addLast(new RpcMessageDecoder());  // inbound
-                            p.addLast(serviceHandlerGroup, new RpcServiceHandler());  // inbound
+                            p.addLast(serviceHandlerGroup, new RpcServerHandler());  // inbound
                         }
                     });
 
