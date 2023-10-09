@@ -99,10 +99,7 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
 
         public String select(String rpcServiceKey) {
             byte[] digest = md5(rpcServiceKey);
-            return selectByKey(hash(digest, 0));
-        }
-
-        public String selectByKey(long hashCode) {
+            long hashCode = hash(digest, 0);
             Map.Entry<Long, String> entry = virtualInvokers.tailMap(hashCode, true).firstEntry();
             if (entry == null) {
                 entry = virtualInvokers.firstEntry();
@@ -110,6 +107,4 @@ public class ConsistentHashLoadBalancer extends AbstractLoadBalancer {
             return entry.getValue();
         }
     }
-
-
 }

@@ -24,8 +24,6 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
 
-    private static final String INTERFACE_NAME = "interfaceName";
-
     // Used for sending requests to the server
     // 客户端将实现这个接口，用于向服务端发送RPC请求
     private final RpcRequestTransport rpcRequestTransport;
@@ -106,13 +104,13 @@ public class RpcClientProxy implements InvocationHandler {
      */
     private void check(RpcResponse<Object> rpcResponse, RpcRequest rpcRequest) {
         if (rpcResponse == null) {
-            throw new RpcException(RpcErrorEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
+            throw new RpcException(RpcErrorEnum.SERVICE_INVOCATION_FAILURE, "interfaceName:" + rpcRequest.getInterfaceName());
         }
         if (!rpcRequest.getRequestId().equals(rpcResponse.getRequestId())) {
-            throw new RpcException(RpcErrorEnum.REQUEST_NOT_MATCH_RESPONSE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
+            throw new RpcException(RpcErrorEnum.REQUEST_NOT_MATCH_RESPONSE,  "interfaceName:" + rpcRequest.getInterfaceName());
         }
         if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCodeEnum.SUCCESS.getCode())) {
-            throw new RpcException(RpcErrorEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
+            throw new RpcException(RpcErrorEnum.SERVICE_INVOCATION_FAILURE,  "interfaceName:" + rpcRequest.getInterfaceName());
         }
     }
 
